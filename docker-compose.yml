@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  postgres-db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres_db
+      POSTGRES_USER: postgres_user
+      POSTGRES_PASSWORD: postgres_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+  mysql-db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: mysql_db
+      MYSQL_USER: mysql_user
+      MYSQL_PASSWORD: mysql_pass
+      MYSQL_ROOT_PASSWORD: root_pass
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres-db
+      - mysql-db
+    environment:
+      POSTGRES_DB_URL: jdbc:postgresql://postgres-db:5432/postgres_db
+      POSTGRES_DB_USER: postgres_user
+      POSTGRES_DB_PASSWORD: postgres_pass
+      MYSQL_DB_URL: jdbc:mysql://mysql-db:3306/mysql_db
+      MYSQL_DB_USER: mysql_user
+      MYSQL_DB_PASSWORD: mysql_pass
+volumes:
+  postgres_data:
+  mysql_data:

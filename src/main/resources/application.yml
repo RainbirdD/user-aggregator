@@ -1,0 +1,33 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+  sql:
+    init:
+      mode: never
+
+data-sources:
+  - name: postgres-db
+    strategy: postgres
+    url: ${POSTGRES_DB_URL:jdbc:postgresql://localhost:5432/postgres_db}
+    table: users
+    user: ${POSTGRES_DB_USER:postgres_user}
+    password: ${POSTGRES_DB_PASSWORD:postgres_pass}
+    mapping:
+      id: user_id
+      username: username
+      name: first_name
+      surname: last_name
+  - name: mysql-db
+    strategy: mysql
+    url: ${MYSQL_DB_URL:jdbc:mysql://localhost:3306/mysql_db}
+    table: user_table
+    user: ${MYSQL_DB_USER:mysql_user}
+    password: ${MYSQL_DB_PASSWORD:mysql_pass}
+    mapping:
+      id: id
+      username: login
+      name: name
+      surname: surname
